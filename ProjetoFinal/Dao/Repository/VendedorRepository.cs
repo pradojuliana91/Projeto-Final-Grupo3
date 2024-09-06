@@ -13,16 +13,21 @@ namespace ProjetoFinal.Dao.Repository
         public List<Vendedor> Pesquisa(int? codigo, string nome)
         {
             string sql = @"SELECT idVendedor, Vendedor,CAST(Comissao as decimal(20,12)) as Comissao, Endereco, Bairro, Cidade, CEP, UF, CPF FROM Vendedores Where 1=1";
+           
+            List<SqlParameter> parameters = new List<SqlParameter>();
 
-            if (codigo != null)
+            if (codigo.HasValue)
             {
-                sql += " and idVendedor = " + codigo;
+                sql += " AND idVendedor = @idVendedor";
+                parameters.Add(new SqlParameter("@idVendedor", codigo.Value));
             }
 
             if (!string.IsNullOrEmpty(nome))
             {
-                sql += " and Vendedor like '%" + nome + "%'";
+                sql += " AND Vendedor LIKE @nome";
+                parameters.Add(new SqlParameter("@nome", "%" + nome + "%"));
             }
+
 
             List<Vendedor> vendedores = new List<Vendedor>();
             using (SqlConnection connection = DataSourceConfig.GetSqlConnection())
@@ -31,6 +36,8 @@ namespace ProjetoFinal.Dao.Repository
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sql, connection);
+
+                    command.Parameters.AddRange(parameters.ToArray());
 
                     SqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
@@ -53,20 +60,25 @@ namespace ProjetoFinal.Dao.Repository
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Erro ao buscar vendedores", ex); ;
+                    throw new Exception("Erro ao buscar vendedores", ex);
                 }
                 finally
                 {
                     connection.Close();
                 }
-                return vendedores;
             }
+
+            return vendedores;
         }
 
         public Vendedor BuscaPorCodigo(int codigo)
         {
             string sql = @"SELECT idVendedor, Vendedor,CAST(Comissao as decimal(20,12)) as Comissao, Endereco, Bairro, Cidade, CEP, UF, CPF 
-                            FROM Vendedores WHERE idVendedor = " + codigo;
+                            FROM Vendedores WHERE idVendedor = @idVendedor";
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            parameters.Add(new SqlParameter("@idVendedor", codigo));
 
             using (SqlConnection connection = DataSourceConfig.GetSqlConnection())
             {
@@ -74,6 +86,8 @@ namespace ProjetoFinal.Dao.Repository
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sql, connection);
+
+                    command.Parameters.AddRange(parameters.ToArray());
 
                     SqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
@@ -108,16 +122,24 @@ namespace ProjetoFinal.Dao.Repository
 
         public void Salvar(Vendedor vendedor)
         {
-            string sql = @"INSERT .....";
+            string sql = @"INSERT INTO Vendedores (Vendedor, Comissao, Endereco, Bairro, Cidade, CEP, UF, CPF) 
+                           VALUES (@NomeVendedor, @Comissao, @Endereco, @Bairro, @Cidade, @CEP, @UF, @CPF)";
 
-            // fazer insert
-         
             using (SqlConnection connection = DataSourceConfig.GetSqlConnection())
             {
                 try
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sql, connection);
+
+                    command.Parameters.AddWithValue("@NomeVendedor", vendedor.NomeVendedor);
+                    command.Parameters.AddWithValue("@Comissao", vendedor.Comissao);
+                    command.Parameters.AddWithValue("@Endereco", vendedor.Endereco);
+                    command.Parameters.AddWithValue("@Bairro", vendedor.Bairro);
+                    command.Parameters.AddWithValue("@Cidade", vendedor.Cidade);
+                    command.Parameters.AddWithValue("@CEP", vendedor.CEP);
+                    command.Parameters.AddWithValue("@UF", vendedor.UF);
+                    command.Parameters.AddWithValue("@CPF", vendedor.CPF);
 
                     command.ExecuteNonQuery();                    
                 }
@@ -134,9 +156,10 @@ namespace ProjetoFinal.Dao.Repository
 
         public void Editar(Vendedor vendedor)
         {
-            string sql = @"UPDATE .....";
+            string sql = @"UPDATE Vendedores SET Vendedor = @NomeVendedor, Comissao = @Comissao, Endereco = @Endereco, 
+                        Bairro = @Bairro, Cidade = @Cidade, CEP = @CEP, UF = @UF, CPF = @CPF WHERE IdVendedor = @IdVendedor";
 
-            // fazer update
+            
 
             using (SqlConnection connection = DataSourceConfig.GetSqlConnection())
             {
@@ -145,11 +168,22 @@ namespace ProjetoFinal.Dao.Repository
                     connection.Open();
                     SqlCommand command = new SqlCommand(sql, connection);
 
+                    command.Parameters.AddWithValue("@NomeVendedor", vendedor.NomeVendedor);
+                    command.Parameters.AddWithValue("@Comissao", vendedor.Comissao);
+                    command.Parameters.AddWithValue("@Endereco", vendedor.Endereco);
+                    command.Parameters.AddWithValue("@Bairro", vendedor.Bairro);
+                    command.Parameters.AddWithValue("@Cidade", vendedor.Cidade);
+                    command.Parameters.AddWithValue("@CEP", vendedor.CEP);
+                    command.Parameters.AddWithValue("@UF", vendedor.UF);
+                    command.Parameters.AddWithValue("@CPF", vendedor.CPF);
+                    command.Parameters.AddWithValue("@IdVendedor", vendedor.IdVendedor);
+
                     command.ExecuteNonQuery();
                 }
+
                 catch (Exception ex)
                 {
-                    throw new Exception("Erro ao atualizar vendedor", ex); ;
+                    throw new Exception("Erro ao atualizar vendedor", ex); 
                 }
                 finally
                 {

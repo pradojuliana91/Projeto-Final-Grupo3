@@ -37,22 +37,67 @@ namespace ProjetoFinal.Web.Vendedores
         {
             try
             {
-               //validar campos obrigatórios e tipos de dados.
+                if (string.IsNullOrWhiteSpace(txtVendedor.Text))
+                {
+                    CommonUtils.Alerta(this, "Nome do Vendedor não pode estar vazio!");
+                    return;
+                }
 
-               Vendedor vendedor = new Vendedor
-               {
-                   NomeVendedor = txtVendedor.Text,
-                   Comissao = decimal.Parse(txtComissao.Text),
-                   Endereco = txtEndereco.Text,
-                   Bairro = txtBairro.Text,
-                   Cidade = txtCidade.Text,
-                   CEP = txtCEP.Text,
-                   UF = txtUF.Text,
-                   CPF = txtCPF.Text
-               };
+                if (string.IsNullOrWhiteSpace(txtCPF.Text))
+                {
+                    CommonUtils.Alerta(this, "CPF não pode estar vazio!");
+                    return;
+                }
+
+                if (!decimal.TryParse(txtComissao.Text, out decimal comissao))
+                {
+                    CommonUtils.Alerta(this, "Comissão inválida! Por favor, insira um valor numérico.");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtCEP.Text))
+                {
+                    CommonUtils.Alerta(this, "CEP não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtEndereco.Text))
+                {
+                    CommonUtils.Alerta(this, "Endereço não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtBairro.Text))
+                {
+                    CommonUtils.Alerta(this, "Bairro não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtCidade.Text))
+                {
+                    CommonUtils.Alerta(this, "Cidade não pode estar vazia!");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(txtUF.Text))
+                {
+                    CommonUtils.Alerta(this, "UF não pode estar vazio!");
+                    return;
+                }
+
+                Vendedor vendedor = new Vendedor
+                {
+                    NomeVendedor = txtVendedor.Text,
+                    Comissao = decimal.Parse(txtComissao.Text),
+                    Endereco = txtEndereco.Text,
+                    Bairro = txtBairro.Text,
+                    Cidade = txtCidade.Text,
+                    CEP = txtCEP.Text,
+                    UF = txtUF.Text,
+                    CPF = txtCPF.Text
+                };
 
                 vendedorService.Salvar(vendedor);
-                Session.Add("msg-pesquisa-vendedor", "Vendedor Salvo Com Sucesso!");
+                Session.Add("msg-pesquisa-vendedor", "Vendedor Cadastrado Com Sucesso!");
                 Response.Redirect("/Web/Vendedores/Pesquisar", false);
             }
             catch (Exception ex)

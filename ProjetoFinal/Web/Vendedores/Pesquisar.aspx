@@ -6,7 +6,7 @@
         </div>
         <br />
         <div style="margin-bottom: 10px">
-            <label>código:</label>
+            <label>Código:</label>
             <asp:TextBox ID="txtCodigo" runat="server" MaxLength="9"></asp:TextBox>
             <label>Vendedor:</label>
             <asp:TextBox ID="txtVendedor" runat="server" MaxLength="50"></asp:TextBox>

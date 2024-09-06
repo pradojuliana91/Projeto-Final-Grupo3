@@ -17,11 +17,6 @@ namespace ProjetoFinal.Service
             return produtoRepository.Pesquisa(codigo, nome);
         }
 
-        public Produto BuscaPorCodigo(int codigo)
-        {
-            return produtoRepository.BuscaPorCodigo(codigo);
-        }
-
         public void Salvar(Produto produto)
         {
             produtoRepository.Salvar(produto);

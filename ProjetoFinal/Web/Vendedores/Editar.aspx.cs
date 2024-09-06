@@ -67,6 +67,53 @@ namespace ProjetoFinal.Web.Vendedores
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(txtVendedor.Text))
+                {
+                    CommonUtils.Alerta(this, "Nome do Vendedor não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtCPF.Text))
+                {
+                    CommonUtils.Alerta(this, "CPF não pode estar vazio!");
+                    return;
+                }
+
+                if (!decimal.TryParse(txtComissao.Text, out decimal comissao))
+                {
+                    CommonUtils.Alerta(this, "Comissão inválida! Por favor, insira um valor numérico.");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtCEP.Text))
+                {
+                    CommonUtils.Alerta(this, "CEP não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtEndereco.Text))
+                {
+                    CommonUtils.Alerta(this, "Endereço não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtBairro.Text))
+                {
+                    CommonUtils.Alerta(this, "Bairro não pode estar vazio!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtCidade.Text))
+                {
+                    CommonUtils.Alerta(this, "Cidade não pode estar vazia!");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(txtUF.Text))
+                {
+                    CommonUtils.Alerta(this, "UF não pode estar vazio!");
+                    return;
+                }
+
                 int codigoVendedorEditar = (int)Session["editar-vendedor-idVendedor"];
 
                 Vendedor vendedor = new Vendedor
@@ -84,10 +131,8 @@ namespace ProjetoFinal.Web.Vendedores
 
                 vendedorService.Editar(vendedor);
                 Session.Remove("editar-vendedor-idVendedor");
-                Session.Add("msg-pesquisa-vendedor", "Vendedor Salvo Com Sucesso!");
+                Session.Add("msg-pesquisa-vendedor", "Vendedor Atualizado Com Sucesso!");
                 Response.Redirect("/Web/Vendedores/Pesquisar", false);
-
-
             }
             catch (Exception ex)
             {
